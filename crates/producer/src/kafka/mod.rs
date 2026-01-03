@@ -1,9 +1,9 @@
 use rdkafka::ClientConfig;
 use rdkafka::producer::{FutureProducer, FutureRecord};
-use tokio::sync::mpsc;
 use shared::OrderEvent;
-use std::time::Duration;
 use std::sync::Arc;
+use std::time::Duration;
+use tokio::sync::mpsc;
 
 pub struct AppState {
     pub tx: mpsc::Sender<OrderEvent>,
@@ -17,7 +17,7 @@ impl AppState {
 
 pub fn start_kafka_worker(producer: FutureProducer) -> mpsc::Sender<OrderEvent> {
     let (tx, mut rx) = mpsc::channel::<OrderEvent>(10_000);
-    
+
     tokio::spawn(async move {
         println!("Background Kafka Worker started.");
         while let Some(event) = rx.recv().await {
@@ -32,7 +32,7 @@ pub fn start_kafka_worker(producer: FutureProducer) -> mpsc::Sender<OrderEvent> 
             }
         }
     });
-    
+
     tx
 }
 
