@@ -1,14 +1,36 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum ProductCategory {
+    Electronics,
+    Books,
+    Clothing,
+    Home,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum OrderStatus {
+    Completed,
+    Pending,
+    Cancelled,
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct OrderEvent {
+    pub order_id: String,
+    pub user_id: String,
+    pub product_id: String,
+    pub category: ProductCategory,
+    pub quantity: i32,
+    pub price: f64,
+    pub region: String,
+    pub status: OrderStatus,
+    pub timestamp: u64,
+}
+
+#[derive(Serialize)]
+pub struct OrderResponse {
+    pub success: bool,
+    pub message: String,
+    pub order_id: Option<String>,
 }
