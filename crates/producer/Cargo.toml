@@ -4,3 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+axum = "0.7"
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+rdkafka = { version = "0.36", features = ["cmake-build"] }
+dotenvy = "0.15" # To manage our Kafka connection strings
+serde_json = "1.0.148"
+# Here is the link to our shared workspace crate!
+shared = { path = "../shared" }

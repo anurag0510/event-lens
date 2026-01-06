@@ -1,6 +1,7 @@
+use async_graphql::{Enum, SimpleObject};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Enum, Copy, Eq, PartialEq)]
 pub enum ProductCategory {
     Electronics,
     Books,
@@ -8,14 +9,14 @@ pub enum ProductCategory {
     Home,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Enum, Copy, Eq, PartialEq)]
 pub enum OrderStatus {
     Completed,
     Pending,
     Cancelled,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, SimpleObject)]
 pub struct OrderEvent {
     pub order_id: String,
     pub user_id: String,
