@@ -3,5 +3,6 @@ members = [
     "crates/producer",
     "crates/consumer",
     "crates/shared",
+    "crates/query-service"
 ]
 resolver = "2"
