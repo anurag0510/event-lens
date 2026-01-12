@@ -9,8 +9,8 @@ A high-performance event-driven analytics platform built with Rust, demonstratin
 │   Producer   │─────▶│  Kafka  │─────▶│   Consumer   │─────▶│ Elasticsearch  │
 │  (HTTP API)  │      │         │      │  (Indexer)   │      │                │
 └──────────────┘      └─────────┘      └──────────────┘      └────────────────┘
-                                     │
-                                     ▼
+                                      │
+                                      ▼
                                 ┌────────────────┐
                                 │ Query Service  │
                                 │   (GraphQL)    │
@@ -29,6 +29,15 @@ A high-performance event-driven analytics platform built with Rust, demonstratin
   - Background worker for non-blocking Kafka publishing
   - Buffered channel (10,000 capacity) for event queuing
 - **Code**: [crates/producer/src/main.rs](crates/producer/src/main.rs)
+
+### Consumer Service
+
+- **Technology**: Kafka consumer with asynchronous processing
+- **Features**:
+  - Real-time event consumption from Kafka topics
+  - Event indexing and processing
+  - Integration with downstream services
+- **Code**: [crates/consumer/src/main.rs](crates/consumer/src/main.rs)
 
 ## Prerequisites
 
@@ -51,6 +60,9 @@ brew install pkgconf
 ```bash
 # Start Producer
 cargo run --bin producer
+
+# Start Consumer
+cargo run --bin consumer
 ```
 
 ## Usage
@@ -78,6 +90,9 @@ event-lens/
 │   │       ├── config/
 │   │       ├── handlers/
 │   │       └── kafka/  # Kafka producer logic
+│   ├── consumer/       # Kafka consumer for event processing
+│   │   └── src/
+│   │       └── main.rs
 │   └── shared/         # Common data structures
 │       └── src/
 ├── Cargo.toml          # Workspace configuration
@@ -99,6 +114,7 @@ Configure in [`Config::default()`](crates/producer/src/config/mod.rs)
 ## Health Checks
 
 - **Producer**: Check logs for "High-throughput Producer listening on"
+- **Consumer**: Check logs for successful Kafka connection and consumption
 
 ## Warnings
 
