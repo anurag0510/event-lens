@@ -9,12 +9,12 @@ A high-performance event-driven analytics platform built with Rust, demonstratin
 │   Producer   │─────▶│  Kafka  │─────▶│   Consumer   │─────▶│ Elasticsearch  │
 │  (HTTP API)  │      │         │      │  (Indexer)   │      │                │
 └──────────────┘      └─────────┘      └──────────────┘      └────────────────┘
-                                      │
-                                      ▼
-                                ┌────────────────┐
-                                │ Query Service  │
-                                │   (GraphQL)    │
-                                └────────────────┘
+                    │
+                    ▼
+                ┌────────────────┐
+                │ Query Service  │
+                │   (GraphQL)    │
+                └────────────────┘
 ```
 
 ## Services
@@ -39,10 +39,22 @@ A high-performance event-driven analytics platform built with Rust, demonstratin
   - Integration with downstream services
 - **Code**: [crates/consumer/src/main.rs](crates/consumer/src/main.rs)
 
+### Query Service
+
+- **Port**: 4000
+- **Endpoint**: `/graphql`
+- **Technology**: Async-GraphQL with Elasticsearch integration
+- **Features**:
+  - GraphQL API for querying indexed events
+  - Real-time search and analytics capabilities
+  - Elasticsearch-backed data retrieval
+- **Code**: [crates/query-service/src/main.rs](crates/query-service/src/main.rs)
+
 ## Prerequisites
 
 - Rust 1.70+ (edition 2024)
 - Apache Kafka (localhost:9092)
+- Elasticsearch (localhost:9200)
 - pkg-config (for building dependencies)
 
 ## Installation
@@ -63,6 +75,9 @@ cargo run --bin producer
 
 # Start Consumer
 cargo run --bin consumer
+
+# Start Query Service
+cargo run --bin query-service
 ```
 
 ## Usage
@@ -76,6 +91,16 @@ curl -X POST http://localhost:3000/orders \
   "order_id": "ORDER-001",
   "region": "US-WEST",
   "category": "electronics"
+  }'
+```
+
+### Querying Events (Query Service)
+
+```bash
+curl -X POST http://localhost:4000/graphql \
+  -H "Content-Type: application/json" \
+  -d '{
+  "query": "{ searchOrders(region: \"US-WEST\") { orderId region category timestamp } }"
   }'
 ```
 
@@ -93,6 +118,9 @@ event-lens/
 │   ├── consumer/       # Kafka consumer for event processing
 │   │   └── src/
 │   │       └── main.rs
+│   ├── query-service/  # GraphQL API for querying events
+│   │   └── src/
+│   │       └── main.rs
 │   └── shared/         # Common data structures
 │       └── src/
 ├── Cargo.toml          # Workspace configuration
@@ -104,6 +132,8 @@ event-lens/
 - **Web Framework**: [Axum](https://github.com/tokio-rs/axum)
 - **Async Runtime**: [Tokio](https://tokio.rs)
 - **Kafka Client**: [rdkafka](https://github.com/fede1024/rust-rdkafka)
+- **GraphQL**: [Async-GraphQL](https://github.com/async-graphql/async-graphql)
+- **Search Engine**: [Elasticsearch](https://www.elastic.co/elasticsearch/)
 
 ## Configuration
 
@@ -111,10 +141,15 @@ event-lens/
 
 Configure in [`Config::default()`](crates/producer/src/config/mod.rs)
 
+### Elasticsearch
+
+Configure connection in query-service configuration
+
 ## Health Checks
 
 - **Producer**: Check logs for "High-throughput Producer listening on"
 - **Consumer**: Check logs for successful Kafka connection and consumption
+- **Query Service**: Check logs for "GraphQL server listening on" and Elasticsearch connectivity
 
 ## Warnings
 
